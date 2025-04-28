@@ -11,5 +11,5 @@ The links:
 ___________________________________________________________
 
 > [!NOTE]
-> In caso di problemi per l'installazione o per pychrono seguire la guida: 
-  *https://api.projectchrono.org/development/pychrono_installation.html*
+> In caso di problemi per l'installazione o per mujoco seguire la guida: 
+  *https://mujoco.readthedocs.io/en/stable/python.html*
