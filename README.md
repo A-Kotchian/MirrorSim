@@ -1,4 +1,4 @@
-H7# MirrorSim
+# MirrorSim
 
 Here all information about the Mirror Simulation. 
 
