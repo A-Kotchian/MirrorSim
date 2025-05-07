@@ -1,11 +1,21 @@
 
 <mujoco>
   
+
+<!--Observations
+
+#Distances
+pos_hookP = 0.375                                   # z position of hook point of marionetta
+dist_hookP_anchorP = 0.6 - (pos_hookP - 0.08)       #lunghezza filo tra attacco e soffitto (posizione soffitto - (pos_hookP + posizione marionetta)) [mm]  EX: 0.6 - (0.375 - 0.08 ) = 0.305 [mm]
+#Density
+rho_M=2700                                          #densita marionetta   Al = 2700 kg/m^3    Si = 2 330 kg/m^3
+rho_S=2500                                          #densita specchio
+
+-->
+
 <!-- Parte visuale -->
 
   <compiler  texturedir="asset"/>
-
-
   <statistic meansize=".05"/>
 
   <visual>
@@ -16,14 +26,12 @@
 
   <asset>
     <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
-
     <material name="matplane"  texture="texplane" texrepeat="10 10" texuniform="true"/>       <!--Se vuoi il riflesso del pavimento +reflectance="0.3"+ -->
   </asset>
 
   <worldbody>
     <light diffuse=".4 .4 .4" specular="0.1 0.1 0.1" pos="0 0 2.0" dir="0 0 -1" castshadow="false"/>
     <light directional="true" diffuse=".8 .8 .8" specular="0.2 0.2 0.2" pos="0 0 4" dir="0 0 -1"/>
-
     <geom name="ground" type="plane" size="0 0 1" pos="0 0 -0.5" quat="1 0 0 0" material="matplane" condim="1"/>
   </worldbody>
 
@@ -34,24 +42,15 @@
 
 
   <asset>
-    <material name="mirror" reflectance="1"/>             <!-- caratteristiche -->
+    <material name="reflectance" reflectance="1"/>             <!-- caratteristiche -->
     <material name="wire_mat" rgba="0.8 0.8 0.8 1"/>
 
     
     <!-- CAMBIARE IL PATH DEI FILE STL -->
+    <!-- <mesh name="wire" file="STL/assieme_dondola1-Fibra_1.15-1.STL" scale= "0.002 0.002 0.002"/>      Usata per test    -->
 
     <mesh name="specchio" file="STL/Specchio2.stl" scale="0.002 0.002 0.002" />                        <!-- Specchio collegamento al file STL -->
-  
-    
-    <!-- Fibre collegamento al file STL -->
-    
-    <!--
-    
-    <mesh name="Fibra1" file="STL/assieme_dondola1-Fibra_1.15-1.STL" scale="0.002 0.002 0.002" />      <!-- Fibra 1 collegamento al file STL -->
-    <mesh name="Fibra2" file="STL/assieme_dondola1-Fibra_1.15-2.STL" scale="0.002 0.002 0.002" />      
-    
-    -->
-
+    <mesh name="Marionetta" file="STL/Marionetta.stl" scale="0.002 0.002 0.002" />                     <!-- Marionetta collegamento al file STL -->
   
   <!-- ========================================================================================================  -->
 
@@ -62,40 +61,46 @@
   <worldbody>
     <light name="light" pos="0 0 1"/>                           <!-- Luce -->
     <camera name="fixed" pos="0 -1.3 .5" xyaxes="1 0 0 0 1 2"/> <!-- Telecamera -->
-    <site name="anchor1" pos="-.2 0 .3" size=".01"/>            <!-- Punto dove metti la corda  -->
-    <site name="anchor2" pos=".2 0 .3" size=".01"/>             <!-- Punto dove metti la corda  -->
+    <site name="anchorP" pos="0 0 0.6"  size="0.01"/>           <!-- Ancora soffitto-->
 
-
-  <!-- I due cavi che collegano lo specchio -->
-       
-<!--
-    <body name="Fibra1" pos="-.212 -.242 -.07">       
-      <geom type="mesh" mesh="Fibra1"  pos="0 0 -0.37" rgba="0.8 0.6 0.4 1" size=".2" euler="90 90 0" />         
-    </body>
-    
-    <body name="Fibra2" pos="-.212 -.242 -.07">       
-      <geom type="mesh" mesh="Fibra2"  pos="0 0 -0.37" rgba="0.8 0.6 0.4 1" size=".2" euler="90 90 0" />         
-    </body>
--->
-   
 
   <!-- ========================================================================================================  -->
 
                                                                                                                       
   <!-- Specchio che si muove e riflette -->                                                                                                                  
-    <body name="cilindro" pos="0 0 -.1">
-      <joint name="free" type="free"/>
-      <geom type="mesh" mesh="specchio"  pos="0 0 -0.37" rgba="0.8 0.6 0.4 1" size=".2" euler="90 90 0" />          <!--Centro di massa si trova verso il 2 buco (-0.37), ma non stai considerando i pasetti e tutto-->
-      <site name="hook1" pos="-.2 0 0" size=".01"/>                                                                 <!-- L'attacco si trova a -0.3455 -->
-      <site name="hook2" pos=".2 0 0" size=".01"/>
+    <body name="mirror" pos="0 0 -0.08">
+      <joint name="freeS" type="free"/>
+      <geom type="mesh" mesh="specchio"  pos="0 0 -0.37" density="2500" rgba="0.8 0.6 0.4 1" size=".2" euler="90 90 0" />            <!--Centro di massa si trova verso il 2 buco (-0.37), ma non stai considerando i pasetti e tutto-->
+      <site name="hookSSx" pos="-.2 0 0" size=".01"/>                                                                 <!-- L'attacco si trova a -0.3455 -->
+      <site name="hookSDx" pos=".2 0 0" size=".01"/>
+      <inertial pos="0 0 0" mass="0.1" diaginertia="0.1 0.1 0.1" />
+      <site name="sensor_mirror" pos="0 -0.030 0" rgba="1 0 0 0.3" size="0.001 0.001 0.001" type="box"/>  
       <site name="IMU"/>
     </body>
 
     
   <!-- ========================================================================================================  -->
 
+  
+  <!-- Marionetta che si muove -->
 
+   <body name="marionetta" pos="0 0 -0.08 ">
+      <joint name="freeM" type="free"/>
+      <geom type="mesh" mesh="Marionetta" size= "0.2" pos="0 0 -0.325" density="2700"  euler="90 90 0" rgba="0.8 0.6 0.4 1"/>
+      <site name="hookMSx" pos="-.2 0 .4" size=".01"/>                                                                 <!-- L'attacco sx si trova a -0.325 -->
+      <site name="hookMDx" pos=".2 0 .4" size=".01"/>                                                                  <!--attacco dx-->
+      <site name="hook_P" pos="0 0 0.375" size=".01"/>                                                           <!-- Attacco tra cavo e marionetta che puo essere modificato( 0.375 z [mm] valore piu basso)-->
+      <inertial pos="0 0 0" mass="0.1" diaginertia="0.1 0.1 0.1" />
+      <site name="sensor_marionetta" pos="0 -0.030 0" rgba="1 0 0 0.3" size="0.001 0.001 0.001" type="box"/>  
+      <site name="IMUM"/>
+    
+    </body>
 
+    <!-- <body name="wirse" pos="0 0 -0.1 ">
+      <joint name="freM" type="free"/>
+      <geom type="mesh" mesh="wire" size="0.2" pos="0 0 -.37"  euler="90 90 0" rgba="0.8 0.6 0.4 1"/>             Usata per tests
+    
+    </body> -->
 
   </worldbody>
 
@@ -118,26 +123,32 @@
   
   <!-- ========================================================================================================  -->
 
-  <tendon>
-    <spatial name="wire1" limited="true" range="0 0.35" width="0.005" damping="0.1">
-      <site site="anchor1"/>
-      <site site="hook1"/>
+  <tendon><!--collegamento lato dx specchio-marionetta-->
+    <spatial name="wire1" limited="true" range="0 .4" width="0.005" damping="0.1">                   <!-- lunghezza reale del filo 200mm (formula scritta sotto)-->
+      <site site="hookMSx"/>
+      <site site="hookSSx"/>
     </spatial>
   </tendon>
   
-  <tendon>
-    <spatial name="wire2" limited="true" range="0 0.35" width="0.005" damping="0.1">
-      <site site="anchor2"/>
-      <site site="hook2"/>
+  <tendon> <!--collegamento lato sx specchio-marionetta-->
+    <spatial name="wire2" limited="true" range="0 .4" width="0.005" damping="0.1">                   <!-- lunghezza reale del filo 200mm (formula scritta sotto)-->
+      <site site="hookMDx"/>
+      <site site="hookSDx"/>
     </spatial>
   </tendon>
 
-  
+  <tendon><!-- collegamento soffitto-marionetta-->
+    <spatial name="CavoPrincipale" limited="true"  range= "0 0.305" width="0.005" damping="0.1">         <!-- rapporto lunghezza:  lunghezza simulatore(mm) = lunghezza vera(mm) * 0.002 (su ogni asse)-->
+      <site site="anchorP"/>                                                                                            <!-- Lunghezza del filo puo essere definita come (punto_anchor - punto_hook)-->
+      <site site="hook_P"/>                                                                                             <!-- NB! Punto_hook = posizione_oggetto(che ha l'hook) + posizione_hook(rispetto all'oggetto)  -->
+    </spatial>
+  </tendon>
 
-
-  
   <sensor>
-    <accelerometer name="accelerometer" site="IMU"/>
+    <force name = "force_mirror" site="sensor_mirror" />
+    <force name = "force_marionetta" site="sensor_marionetta" />
   </sensor>
 
 </mujoco>
+
+
