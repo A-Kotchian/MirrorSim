@@ -102,7 +102,9 @@ rho_S=2500                                          #densita specchio
     
     </body> -->
 
+
   </worldbody>
+
 
 
 <!-- PER VEDERE GLI ASSI CARTESIANI https://mujoco.readthedocs.io/en/latest/programming/samples.html#sasimulate -->
