@@ -13,6 +13,21 @@ rho_S=2500                                          #densita specchio
 
 -->
 
+  <option timestep=".001">
+    <flag energy="enable"/>
+  </option>
+
+<!--Observations
+
+#Distances
+pos_hookP = 0.375                                   # z position of hook point of marionetta
+dist_hookP_anchorP = 0.6 - (pos_hookP - 0.08)       #lunghezza filo tra attacco e soffitto (posizione soffitto - (pos_hookP + posizione marionetta)) [mm]  EX: 0.6 - (0.375 - 0.08 ) = 0.305 [mm]
+#Density
+rho_M=2700                                          #densita marionetta   Al = 2700 kg/m^3    Si = 2 330 kg/m^3
+rho_S=2500                                          #densita specchio
+
+-->
+
 <!-- Parte visuale -->
 
   <compiler  texturedir="asset"/>
@@ -70,7 +85,7 @@ rho_S=2500                                          #densita specchio
   <!-- Specchio che si muove e riflette -->                                                                                                                  
     <body name="mirror" pos="0 0 -0.08">
       <joint name="freeS" type="free"/>
-      <geom type="mesh" mesh="specchio"  pos="0 0 -0.37" density="2500" rgba="0.8 0.6 0.4 1" size=".2" euler="90 90 0" />            <!--Centro di massa si trova verso il 2 buco (-0.37), ma non stai considerando i pasetti e tutto-->
+      <geom type="mesh" mesh="specchio"  pos="0 0 -0.37" density="2500" rgba="0.8 0.6 0.4 1" size=".2" euler="90 270 0" />            <!--Centro di massa si trova verso il 2 buco (-0.37), ma non stai considerando i pasetti e tutto-->
       <site name="hookSSx" pos="-.2 0 0" size=".01"/>                                                                 <!-- L'attacco si trova a -0.3455 -->
       <site name="hookSDx" pos=".2 0 0" size=".01"/>
       <inertial pos="0 0 0" mass="0.1" diaginertia="0.1 0.1 0.1" />
@@ -89,13 +104,16 @@ rho_S=2500                                          #densita specchio
       <geom type="mesh" mesh="Marionetta" size= "0.2" pos="0 0 -0.325" density="2700"  euler="90 90 0" rgba="0.8 0.6 0.4 1"/>
       <site name="hookMSx" pos="-.2 0 .4" size=".01"/>                                                                 <!-- L'attacco sx si trova a -0.325 -->
       <site name="hookMDx" pos=".2 0 .4" size=".01"/>                                                                  <!--attacco dx-->
-      <site name="hook_P" pos="0 0 0.375" size=".01"/>                                                           <!-- Attacco tra cavo e marionetta che puo essere modificato( 0.375 z [mm] valore piu basso)-->
+      <site name="hook_P" pos="0 0 0.375 " size=".01"/>                                                           <!-- Attacco tra cavo e marionetta che puo essere modificato( 0.375 z [mm] valore piu basso)-->
       <inertial pos="0 0 0" mass="0.1" diaginertia="0.1 0.1 0.1" />
       <site name="sensor_marionetta" pos="0 -0.030 0" rgba="1 0 0 0.3" size="0.001 0.001 0.001" type="box"/>  
       <site name="IMUM"/>
     
     </body>
-
+    
+    <body>
+      <geom name="sensore" pos="0 -0.030 -0.08" rgba="1 0 0 0.3" size="0.007 0.007 0.007"/>                           
+    </body>
     <!-- <body name="wirse" pos="0 0 -0.1 ">
       <joint name="freM" type="free"/>
       <geom type="mesh" mesh="wire" size="0.2" pos="0 0 -.37"  euler="90 90 0" rgba="0.8 0.6 0.4 1"/>             Usata per tests
@@ -103,10 +121,22 @@ rho_S=2500                                          #densita specchio
     </body> -->
 
 
+    <!-- To find position of objects 
+    <body> 
+        <geom name="Punto" pos="0.13 -0.04 -0.208" contype="0" size=".01" rgba="0 1 0 1"/>
+    </body>
+  
+
+   Position of points: 
+                          Mirror
+                          *Up-Dx =  0.13 -0.04 0.045
+                          *Up-Sx = -0.13 -0.04 0.045
+                          *Down-Sx = 0.13 -0.04 -0.208
+                          *Down-Dx = 0.13 -0.04 -0.208
+                           -->
+  
+  
   </worldbody>
-
-
-
 <!-- PER VEDERE GLI ASSI CARTESIANI https://mujoco.readthedocs.io/en/latest/programming/samples.html#sasimulate -->
 
 
@@ -152,5 +182,3 @@ rho_S=2500                                          #densita specchio
   </sensor>
 
 </mujoco>
-
-
