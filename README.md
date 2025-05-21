@@ -13,5 +13,5 @@ ___________________________________________________________
 > [!NOTE]
 > In case of mujoco error follow this guide: 
   *https://mujoco.readthedocs.io/en/stable/python.html*
-> In case of ray tracing error follow the github reporistory:
-  *https://github.com/cihologramas/pyoptools/tree/master*
+> In case of ray tracing error follow this guide:
+  *https://github.com/cihologramas/pyoptools/tree/master](https://pyoptools.readthedocs.io/en/latest/install.html*
