@@ -13,5 +13,6 @@ ___________________________________________________________
 > [!NOTE]
 > In case of mujoco error follow this guide: 
   *https://mujoco.readthedocs.io/en/stable/python.html*
+> 
 > In case of ray tracing error follow this guide:
   *https://pyoptools.readthedocs.io/en/latest/install.html*
