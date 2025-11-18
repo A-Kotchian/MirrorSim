@@ -2,6 +2,15 @@
 
 Here all information about the Mirror Simulation. 
 
+
+Installation of envirorment conda: ()
+
+'''
+cd MirrorSim
+conda env create -n test  -f environment.yml
+
+'''
+
 For python dependeces use the txt file *python_requirements.txt*.
 
 The links:
